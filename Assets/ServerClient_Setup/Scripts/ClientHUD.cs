@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -21,7 +21,7 @@ public class ClientHUD : MonoBehaviour
         if (!manager)
             manager = GetComponent<NetworkManager>();
 
-        //checking if we have saved server info.
+        //Comprobar si se ha guardado la información del servidor.
         if (PlayerPrefs.HasKey("nwPortC"))
         {
             manager.networkPort = Convert.ToInt32(PlayerPrefs.GetString("nwPortC"));
@@ -38,7 +38,7 @@ public class ClientHUD : MonoBehaviour
     {
         if (!connected)
         {
-            //shows the failed to connect message after a certain time waiting to connect.
+            //muestra el mensaje que no se ha podido conectar después de un cierto tiempo en espera de conectarse.
             if (connectingTimer > 0)
                 connectingTimer -= Time.deltaTime;
             else
@@ -54,18 +54,18 @@ public class ClientHUD : MonoBehaviour
 
     public void ConnectToServer()
     {
-        if (ipText.text != "" && portText.text != "")//is the information filled in ?.
+        if (ipText.text != "" && portText.text != "")//¿está llena la información?
         {
             connected = false;
             disConnectMessage.SetActive(false);
             connectingText.text = "Connecting !!";
             connecting.SetActive(true);
-            connectingTimer = 8;//how long we try to connect until the fail message appears.
-            connectionFaileTimer = 2;//how long the fail message is showing.
+            connectingTimer = 8;//¿Cuánto tiempo nos intenta conectarse hasta que el mensaje de error aparece.
+            connectionFaileTimer = 2;//Cuánto tiempo se muestra el mensaje Fail.
             manager.networkAddress = ipText.text;
             manager.networkPort = Convert.ToInt32(portText.text);
-            PlayerPrefs.SetString("IPAddressC", ipText.text);//saving the filled in ip.
-            PlayerPrefs.SetString("nwPortC", portText.text);//saving the filled in port.
+            PlayerPrefs.SetString("IPAddressC", ipText.text);//guardando la ip ingresada
+            PlayerPrefs.SetString("nwPortC", portText.text);//guardando el puerto ingresado
 
             manager.StartClient();
         }
@@ -79,7 +79,7 @@ public class ClientHUD : MonoBehaviour
         disConnect.SetActive(true);
         connectToServer.SetActive(false);
         addressPanel.SetActive(false);
-        //menuCam.SetActive(false);   //if your player has a camera on him this one should be turned off when entering the game/lobby.
+        //menuCam.SetActive(false);   //Si su jugador tiene una cámara en él éste debe ser apagado al entrar en el juego/vestíbulo.
     }
 
     public void ButtonDisConnect()

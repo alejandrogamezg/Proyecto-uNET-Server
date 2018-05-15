@@ -9,7 +9,9 @@ public class ServerHUD : MonoBehaviour {
 
     public GameObject stopServer, startServer, resetSettings, getIP, checking, clientsInfo;
     public Text serverInfoText, portPlaceholderText, paswPlaceholderText, clientsInfoText;
-    public InputField portText, passwordText, maxConnText;
+    // public InputField portText, passwordText, maxConnText;
+    public InputField portText, maxConnText;
+
 
     private NetworkManager manager;
     private bool noConnection, setText, checkIP;
@@ -21,7 +23,7 @@ public class ServerHUD : MonoBehaviour {
         if (!manager)
             manager = GetComponent<NetworkManager>();
         
-        //Checking if we have saved Server Infomation and filling the text fields.
+        //Comprobando si hemos guardado información del servidor y rellenando los campos de texto.
         if (PlayerPrefs.HasKey("nwPortS"))
         {
             manager.networkPort = Convert.ToInt32(PlayerPrefs.GetString("nwPortS"));
@@ -33,12 +35,12 @@ public class ServerHUD : MonoBehaviour {
             localIP = PlayerPrefs.GetString("LocalIP");
             getIP.GetComponentInChildren<Text>().text = "Server IP Address\nExternal :" + externalip + "\nLocal :" + localIP;
         }
-        if (PlayerPrefs.HasKey("Password"))
-        {
-            passwordText.text = PlayerPrefs.GetString("Password");
-            if (passwordText.text == "")
-                paswPlaceholderText.text = "(not needed)";
-        }
+        // if (PlayerPrefs.HasKey("Password"))
+        // {
+        //     passwordText.text = PlayerPrefs.GetString("Password");
+        //     if (passwordText.text == "")
+        //         paswPlaceholderText.text = "(not needed)";
+        // }
         if (PlayerPrefs.HasKey("MaxConnections"))
         {
             maxConnText.text = PlayerPrefs.GetString("MaxConnections");
@@ -54,7 +56,7 @@ public class ServerHUD : MonoBehaviour {
         noConnection = (manager.client == null || manager.client.connection == null ||
                      manager.client.connection.connectionId == -1);
 
-        //Showing and hiding the appropriate buttons and text depending on if the server is running or not.
+        //Mostrar y ocultar los botones y el texto apropiados dependiendo de si el servidor está en ejecución o no.
         if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
         {
             if (noConnection)
@@ -75,23 +77,24 @@ public class ServerHUD : MonoBehaviour {
             if (setText)
             {
                 serverInfoText.color = new Color(0.2f, 0.6f, 0.2f, 1f);
-                string pw="";               
-                if (passwordText.text == "")               
-                    pw = "(no password)";                
-                else pw = passwordText.text;
+                // string pw="";               
+                // if (passwordText.text == "")               
+                //     pw = "(no password)";                
+                // else pw = passwordText.text;
 
                 string maxConn = "";
                 if (maxConnText.text == "")
                     maxConn = "8";
                 else maxConn = maxConnText.text;
 
-                serverInfoText.text = "Server Is Running !\n" +"\nIP Address\nExternal : " +externalip+"\nLocal : "+localIP+"\n\nServer Port : " + manager.networkPort+"\nPassword : "+pw+"\nMax Connections : "+ maxConn;
+                serverInfoText.text = "Servidor ejecutando !\n" +"\nIP Address\nExternal : " +externalip+"\nLocal :"+localIP+"\n\nServer Port : " + manager.networkPort+"\nMax Connections : "+ maxConn;
+                // "+localIP+"\n\nServer Port : " + manager.networkPort+"\nPassword : "+pw+"\nMax Connections : "+ maxConn;
                 setText = false;
             }
         }
     }
 
-    //shutdown the server.
+    //Apagar el servidor.
     public void StopHostCustom()
     {
         startServer.SetActive(true);
@@ -104,14 +107,14 @@ public class ServerHUD : MonoBehaviour {
 
     public void StartServerCustom()
     {
-        //setting the network managers port to use.
-        if (portText.text == "")//did we not set a port number ?
+        //configuración del puerto de administradores de red que se usará.
+        if (portText.text == "")//No hemos establecido un número de puerto ?
         {
-            if (PlayerPrefs.HasKey("nwPortS"))//did we have a previous one saved.
+            if (PlayerPrefs.HasKey("nwPortS"))//¿hemos guardado uno anterior?
             {
                 manager.networkPort = Convert.ToInt32(PlayerPrefs.GetString("nwPortS"));
             }
-            else//if not, use the default port.
+            else//Si no es así, utilice el puerto predeterminado.
             {
                 manager.networkPort = 7777;
                 portPlaceholderText.text = manager.networkPort.ToString()+"(Default)";
@@ -119,14 +122,14 @@ public class ServerHUD : MonoBehaviour {
         }
         else
         {
-            PlayerPrefs.SetString("nwPortS", portText.text);//save the port we are using.         
+            PlayerPrefs.SetString("nwPortS", portText.text);//guardamos el puerto que estamos usando.     
             manager.networkPort = Convert.ToInt32(portText.text);
             portPlaceholderText.text = manager.networkPort.ToString();
         }
 
-        PlayerPrefs.SetString("Password", passwordText.text);//save the servers pasword.  
+        // PlayerPrefs.SetString("Password", passwordText.text);//guardar los servidores de contraseña.
         PlayerPrefs.SetString("MaxConnections", maxConnText.text.ToString());
-        //Showing and hiding the appropriate buttons and text.  
+        //Mostrar y ocultar los botones y el texto apropiados. 
         resetSettings.SetActive(false);
         portText.transform.parent.gameObject.SetActive(false);
         getIP.SetActive(false);
@@ -153,7 +156,7 @@ public class ServerHUD : MonoBehaviour {
 
     public void ResetToDefault()
     {
-        //deleting all saved info and resetting to use the default ones.
+        //borrando toda la información guardada y reconfigurando para usar los valores predeterminados.
         PlayerPrefs.DeleteKey("IPAddressS");
         getIP.GetComponentInChildren<Text>().text = "Find Server IP Address.";
         externalip = "?";
@@ -162,44 +165,45 @@ public class ServerHUD : MonoBehaviour {
         portText.text = "";
         PlayerPrefs.DeleteKey("LocalIP");
         localIP = "?";
-        PlayerPrefs.DeleteKey("Password");
-        paswPlaceholderText.text = "(not needed)";
-        passwordText.text = "";
+        // PlayerPrefs.DeleteKey("Password");
+        // paswPlaceholderText.text = "(not needed)";
+        // passwordText.text = "";
         PlayerPrefs.DeleteKey("MaxConnections");
         maxConnText.text = "";
     }
 
-    //Finding the servers ip addresses.
+    //Encontrar las direcciones IP de los servidores.
     public void GetIP()
     {
         getIP.GetComponentInChildren<Text>().text = "If this takes too long\nClick again.";
-        StartCoroutine(GetPublicIP());//start the actual checkking.
+        StartCoroutine(GetPublicIP());//iniciando la comprobacion
         checking.SetActive(true);
+        Debug.Log("Obteniendo IP Local...");
     }
 
     IEnumerator GetPublicIP()
     {
-        WWW www = new WWW("http://checkip.dyndns.org");//the website to use to find your external ip, use any "find my ip" site you want.
-        yield return www;//wait till we get a response.
+        WWW www = new WWW("http://checkip.dyndns.org");//el sitio web a utilizar para encontrar su IP externa, utilizar cualquier "encontrar mi IP" sitio que desee.
+        yield return www;//Espere hasta que obtenga una respuesta.
         if (www.error==null)
         {
-            //filter the response message for the ip address.
+            //Filtrar el mensaje de respuesta a la dirección IP.
             string response = www.text;
             string[] a = response.Split(':');
             string a2 = a[1].Substring(1);
             string[] a3 = a2.Split('<');
             string a4 = a3[0];
-            externalip = a4;//TADAA..!!   your external ip addres :)
+            externalip = a4;//Obtenemos nuestra IP Externa
 
-            //getting the ip from the pc the server is running on. (a local Lan address) 
-            //onely used to connect from inside your house/network.
+            // Obtener la IP del PC en el que se está ejecutando el servidor.
             localIP = Network.player.ipAddress;
 
             getIP.GetComponentInChildren<Text>().text = "Server IP Address\nExternal :" + externalip+"\nLocal :"+localIP;
-            //saving the ip addresses.
+            //guardando las direcciones IP
             PlayerPrefs.SetString("IPAddressS", externalip);
             PlayerPrefs.SetString("LocalIP", localIP);
             checking.SetActive(false);
+            Debug.Log("Obteniendo IP Externa...");
         }
         else
         {

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class Mesages : NetworkBehaviour {
+public class ActivaDesactiva : NetworkBehaviour {
 
     //A efectos de ejemplo
     public InputField inputField;
